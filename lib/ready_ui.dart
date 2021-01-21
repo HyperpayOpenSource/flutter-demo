@@ -82,7 +82,7 @@ class _Ready_UIState extends State<Ready_UI> {
 
     var status;
 
-    String myUrl = "http://reemapp.com/reqcheckoutidios.php";
+    String myUrl = "http://dev.hyperpay.com/hyperpay-demo/getcheckoutid.php";
     final response = await http.post(
       myUrl,
       headers: {'Accept': 'application/json'},
@@ -123,7 +123,7 @@ class _Ready_UIState extends State<Ready_UI> {
   Future<void> getpaymentstatus() async {
     var status;
 
-    String myUrl = "http://reemapp.com/shopperresultIOS.php?id=$_checkoutid";
+    String myUrl = "http://dev.hyperpay.com/hyperpay-demo/getpaymentstatus.php?id=$_checkoutid";
     final response = await http.post(
       myUrl,
       headers: {'Accept': 'application/json'},

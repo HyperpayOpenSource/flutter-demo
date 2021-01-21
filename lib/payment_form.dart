@@ -16,8 +16,8 @@ class payment_form extends StatefulWidget {
 
 String _checkoutid = '';
 String _resultText = '';
-String _MadaRegexV = "";
-String _MadaRegexM = "";
+String _MadaRegexV = "4(0(0861|1757|7(197|395)|9201)|1(0685|7633|9593)|2(281(7|8|9)|8(331|67(1|2|3)))|3(1361|2328|4107|9954)|4(0(533|647|795)|5564|6(393|404|672))|5(5(036|708)|7865|8456)|6(2220|854(0|1|2|3))|8(301(0|1|2)|4783|609(4|5|6)|931(7|8|9))|93428)";
+String _MadaRegexM = "5(0(4300|8160)|13213|2(1076|4(130|514)|9(415|741))|3(0906|1095|2013|5(825|989)|6023|7767|9931)|4(3(085|357)|9760)|5(4180|7606|8848)|8(5265|8(8(4(5|6|7|8|9)|5(0|1))|98(2|3))|9(005|206)))|6(0(4906|5141)|36120)|9682(0(1|2|3|4|5|6|7|8|9)|1(0|1))";
 String _MadaHash = "";
 
 class _payment_formState extends State<payment_form> {
@@ -38,19 +38,6 @@ class _payment_formState extends State<payment_form> {
     this.type = type;
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      final prefs = await SharedPreferences.getInstance();
-      _MadaHash = prefs.get("MadaHash") ?? "";
-      _MadaRegexV = prefs.get("madaV") ?? "";
-      _MadaRegexM = prefs.get("madaM") ?? "";
-      await _requestMadaRegex();
-    });
-  }
 
   @override
   void dispose() async {
@@ -320,7 +307,7 @@ class _payment_formState extends State<payment_form> {
   Future<void> getpaymentstatus() async {
     var status;
 
-    String myUrl = "http://reemapp.com/shopperresultIOS.php?id=$_checkoutid";
+    String myUrl = "http://dev.hyperpay.com/hyperpay-demo/getpaymentstatus.php?id=$_checkoutid";
     final response = await http.post(
       myUrl,
       headers: {'Accept': 'application/json'},
@@ -336,41 +323,12 @@ class _payment_formState extends State<payment_form> {
     });
   }
 
-  Future<String> _requestMadaRegex() async {
-    int status;
-    // String myUrl = "http://reemapp.com/reqcheckoutidios.php?STCPAY_Number=${_STCPAYText.text}";
-    String myUrl = "http://reemapp.com/MadaRegex.php";
-    final response = await http.post(myUrl,
-        headers: {'Accept': 'application/json'}, body: {"hash": _MadaHash});
 
-    var data = json.decode(response.body);
-
-    final prefs = await SharedPreferences.getInstance();
-
-    status = data['result'];
-    if (status == 1 || status == 2) {
-      final key = 'MadaHash';
-      final value = data['hash'];
-      prefs.setString(key, value);
-      prefs.setString("MadaV", data['Visa']);
-      prefs.setString("MadaM", data['Master']);
-
-      _MadaHash = value;
-      _MadaRegexV = data['Visa'];
-      _MadaRegexM = data['Master'];
-    }
-
-
-    print("madastatus" + status.toString());
-    print("madahash" + _MadaHash);
-    print("madaVisa" + _MadaRegexV);
-    print("madaMaster" + _MadaRegexM);
-  }
 
   Future<String> _requestCheckoutId() async {
     var status;
     String myUrl =
-        "http://reemapp.com/reqcheckoutidios.php?STCPAY_Number=${_STCPAYText.text}&brand=$type";
+        "http://dev.hyperpay.com/hyperpay-demo/getcheckoutid.php";
 
     final response = await http.post(
       myUrl,
